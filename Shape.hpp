@@ -3,12 +3,12 @@
 
 struct Point
 {
-    int x, y;
+    float x, y;
 };
 
 struct Line
 {
-    int x1, y1, x2, y2;
+    float x1, y1, x2, y2;
 };
 
 #endif

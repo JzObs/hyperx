@@ -7,7 +7,7 @@
 #include <memory>
 #include <cstdlib>
 
-void Sync();
+void Sync(const unsigned int frameMs);
 
 int main(int argc, char* argv[])
 {
@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
         stars[i].Randomize(windowWidth, windowHeight);
     }
 
+    const unsigned int frameMs = 16;
     while (!quit) {
         SDL_SetRenderDrawColor(renderer->Raw(), 32, 32, 32, 255);
 	    SDL_RenderClear(renderer->Raw());
@@ -46,28 +47,28 @@ int main(int argc, char* argv[])
 
         for(int i = 0; i < 500; ++i) {
             renderer->Draw(stars[i]);
-            stars[i].pos.x += stars[i].speed;
-            if(stars[i].pos.x >= (int)windowWidth) {
+            stars[i].pos.x += frameMs / 33.0 * stars[i].speed;
+            if(stars[i].pos.x >= windowWidth) {
                 stars[i].pos.y = std::rand() % windowHeight;
-                stars[i].pos.x %= windowWidth;
+                stars[i].pos.x -= windowWidth;
             }
         }
 
         SDL_RenderPresent(renderer->Raw());
-        Sync();
+        Sync(frameMs);
     }
 
     return 0;
 }
 
-void Sync()
+void Sync(const unsigned int frameMs)
 {
     static unsigned long tick = 0;
 
     unsigned long tock = SDL_GetTicks();
     unsigned long elapse = tock - tick;
-    if(elapse < 33) {
-        elapse = 33 - elapse;
+    if(elapse < frameMs) {
+        elapse = frameMs - elapse;
     } else {
         elapse = 1;
     }

@@ -22,6 +22,6 @@ void Renderer::Draw(const Star& s)
     unsigned int c = 32 * s.speed - 1;
 	SDL_SetRenderDrawColor(pRenderer, c, c, c, 255);
 
-    SDL_Rect r{s.pos.x, s.pos.y, (int)s.width, (int)s.height};
+    SDL_Rect r{(int)s.pos.x, (int)s.pos.y, (int)s.width, (int)s.height};
     SDL_RenderFillRect(pRenderer, &r);
 }
