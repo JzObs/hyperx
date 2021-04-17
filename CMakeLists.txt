@@ -15,6 +15,4 @@ find_library(SDL2_LIB SDL2)
 add_executable(hyperx hyperx.cpp Initializer.cpp Window.cpp Renderer.cpp Object.cpp)
 target_link_libraries(hyperx SDL2)
 
-if(MSVC)
-    configure_file(SDL2.dll SDL2.dll COPYONLY)
-endif()
+configure_file(SDL2.dll SDL2.dll COPYONLY)
