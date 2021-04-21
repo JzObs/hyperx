@@ -2,6 +2,9 @@
 #include "Window.hpp"
 #include "Renderer.hpp"
 #include "Shape.hpp"
+#include "Warehouse.hpp"
+#include "App.hpp"
+#include "Logger.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <memory>
@@ -19,60 +22,14 @@ int main(int argc, char* argv[])
     const unsigned int windowHeight = 720;
     auto window = std::make_shared<Window>(initializer, windowWidth, windowHeight);
     auto renderer = std::make_shared<Renderer>(window);
+    auto warehouse = std::make_shared<Warehouse>(renderer);
+    auto app = std::make_shared<App>(renderer);
 
-    bool quit = false;
-    SDL_Event event;
-
-    Star stars[500];
-    for(int i = 0; i < 500; ++i) {
-        stars[i].Randomize(windowWidth, windowHeight);
-    }
-
-    const unsigned int frameMs = 16;
-    while (!quit) {
-        SDL_SetRenderDrawColor(renderer->Raw(), 32, 32, 32, 255);
-	    SDL_RenderClear(renderer->Raw());
-
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-            case SDL_QUIT:
-                quit = true;
-                break;
-            case SDL_MOUSEMOTION:
-                if(SDL_GetMouseState(NULL, NULL) &SDL_BUTTON(1))
-                    SDL_RenderDrawPoint(renderer->Raw(), event.motion.x, event.motion.y);
-                break;
-            }
-        }
-
-        for(int i = 0; i < 500; ++i) {
-            renderer->Draw(stars[i]);
-            stars[i].pos.x += frameMs / 33.0 * stars[i].speed;
-            if(stars[i].pos.x >= windowWidth) {
-                stars[i].pos.y = std::rand() % windowHeight;
-                stars[i].pos.x -= windowWidth;
-            }
-        }
-
-        SDL_RenderPresent(renderer->Raw());
-        Sync(frameMs);
-    }
+    auto scene = std::make_shared<Scene>(windowWidth, windowHeight);
+    scene->AddBackground(warehouse->GetTexture(WarehouseSprite::background));
+    scene->AddCloud(warehouse->GetTexture(WarehouseSprite::cloud));
+    app->SelectScene(scene);
+    app->Run();
 
     return 0;
-}
-
-void Sync(const unsigned int frameMs)
-{
-    static unsigned long tick = 0;
-
-    unsigned long tock = SDL_GetTicks();
-    unsigned long elapse = tock - tick;
-    if(elapse < frameMs) {
-        elapse = frameMs - elapse;
-    } else {
-        elapse = 1;
-    }
-    tick = tock;
-
-    SDL_Delay(elapse);
 }

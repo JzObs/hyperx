@@ -3,7 +3,9 @@
 
 #include "Window.hpp"
 #include "Object.hpp"
-#include <SDL2/SDL.h>
+#include "Texture.hpp"
+
+struct SDL_Renderer;
 
 class Renderer
 {
@@ -19,7 +21,12 @@ public:
         return pRenderer;
     }
 
+    void Prepare();
+    void Render();
+
     void Draw(const Star& s);
+    void DrawEx(const Texture& t);
+    void Draw(const Texture& t);
 };
 
 #endif

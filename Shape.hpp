@@ -11,4 +11,10 @@ struct Line
     float x1, y1, x2, y2;
 };
 
+struct Rect
+{
+    float x, y;
+    int w, h;
+};
+
 #endif

@@ -7,17 +7,23 @@ Scene::Scene(unsigned int width, unsigned int height) : width(width), height(hei
     }
 }
 
-void Scene::AddBackground()
+void Scene::AddBackground(Texture&& texture)
 {
+    background = std::move(texture);
+}
 
+void Scene::AddCloud(Texture&& texture)
+{
+    cloud.texture = std::move(texture);
 }
 
 void Scene::Draw(Renderer& renderer)
 {
-    renderer.Draw(background);
+    renderer.DrawEx(background);
     for(const auto& s : stars) {
         renderer.Draw(s);
     }
+    renderer.Draw(cloud.texture);
 }
 
 void Scene::Advance(const unsigned int ms)
